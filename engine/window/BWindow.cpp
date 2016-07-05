@@ -20,11 +20,21 @@ void BWindow::create(std::string title) {
 		windowErrorLog.write("Renderer could not be created.");
 	}
 
+	// Window is running
 	isOpen = true;
 
 	setupSceneHandler();
 
 	windowErrorLog.close();
+}
+
+void BWindow::eventListener() {
+	while(SDL_PollEvent(&getEvents())) {
+		input.eventHandler(&getEvents());
+		if(getEvents().type == SDL_QUIT) {
+			quit();
+		}
+	}
 }
 
 /**
@@ -49,6 +59,7 @@ void BWindow::getWindowProperties() {
 
 void BWindow::setupSceneHandler() {
 	scenehandler.setRenderer(renderer);
+	scenehandler.init();
 }
 
 /**
@@ -62,7 +73,7 @@ void BWindow::draw() {
 	SDL_RenderClear(renderer);
 
 	for(auto &i : scenehandler.getAll()) {
-		//i.second->draw();
+		//i.second->loop();
 	}
 
 	SDL_RenderPresent(renderer);

@@ -12,8 +12,7 @@ void JSONScript::setFile(std::string file) {
 	if (location.good()) {
 		location >> data;
 		exists = true;
-	}
-	else {
+	} else {
 		errors = true;
 	}
 }

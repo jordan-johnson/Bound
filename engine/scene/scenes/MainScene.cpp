@@ -2,4 +2,5 @@
 
 void MainScene::setup() {
 	json.setFile("resources/main/scenes/main");
+	std::cout << "test";
 }

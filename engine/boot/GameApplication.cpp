@@ -8,16 +8,8 @@ void GameApplication::init() {
 
 void GameApplication::loop() {
 	while(gameWindow.isOpen) {
-		eventListener();
+		gameWindow.eventListener();
 
 		gameWindow.draw();
-	}
-}
-
-void GameApplication::eventListener() {
-	while(SDL_PollEvent(&gameWindow.getEvents())) {
-		if(gameWindow.getEvents().type == SDL_QUIT) {
-			gameWindow.quit();
-		}
 	}
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <SDL.h>
+#include "../systemtools/Input.h"
 #include "../systemtools/JSONScript.h"
 #include "../systemtools/ErrorLog.h"
 #include "../scene/SceneHandler.h"
@@ -14,6 +15,7 @@ private:
 	SDL_Event bevent;
 	SDL_Renderer *renderer;
 
+	Input input;
 	SceneHandler scenehandler;
 
 	// window properties
@@ -28,6 +30,7 @@ public:
 
 	void overrideFile(std::string file);
 	void create(std::string title);
+	void eventListener();
 	void draw();
 	void quit();
 
