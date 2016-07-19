@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include <SDL.h>
-#include "../systemtools/Input.h"
+#include "../systemtools/Vector2.h"
 #include "../systemtools/JSONScript.h"
 #include "../systemtools/ErrorLog.h"
 #include "../scene/SceneHandler.h"
@@ -15,12 +15,12 @@ private:
 	SDL_Event bevent;
 	SDL_Renderer *renderer;
 
-	Input input;
 	SceneHandler scenehandler;
 
-	// window properties
-	unsigned int width, height;
+	Vector2u windowSize;
 	SDL_WindowFlags winFlag;
+
+	// Location of JSON file
 	std::string fileLocation;
 
 	void getWindowProperties();
@@ -31,7 +31,6 @@ public:
 	void overrideFile(std::string file);
 	void create(std::string title);
 	void eventListener();
-	void draw();
 	void quit();
 
 	SDL_Window* getWindow();

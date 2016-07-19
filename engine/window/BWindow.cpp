@@ -8,16 +8,18 @@ void BWindow::create(std::string title) {
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, winFlag);
+	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, winFlag);
 
 	if(window == NULL) {
 		windowErrorLog.write("Window could not be created.");
+		isOpen = false;
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, 0);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	if(renderer == NULL) {
 		windowErrorLog.write("Renderer could not be created.");
+		isOpen = false;
 	}
 
 	// Window is running
@@ -30,11 +32,13 @@ void BWindow::create(std::string title) {
 
 void BWindow::eventListener() {
 	while(SDL_PollEvent(&getEvents())) {
-		input.eventHandler(&getEvents());
+		scenehandler.events(&getEvents());
 		if(getEvents().type == SDL_QUIT) {
 			quit();
 		}
 	}
+
+	scenehandler.update();
 }
 
 /**
@@ -45,8 +49,8 @@ void BWindow::getWindowProperties() {
 
 	JSONScript js(file);
 
-	width = js.getInt("WIN_WIDTH", 800);
-	height = js.getInt("WIN_HEIGHT", 600);
+	windowSize.x = js.getInt("WIN_WIDTH", 800);
+	windowSize.y = js.getInt("WIN_HEIGHT", 600);
 
 	std::string isFullScreen = js.getString("WIN_FULLSCREEN", "false");
 
@@ -54,7 +58,8 @@ void BWindow::getWindowProperties() {
 		winFlag = SDL_WINDOW_FULLSCREEN_DESKTOP;
 	else
 		winFlag = SDL_WINDOW_SHOWN;
-	
+
+	js.close();
 }
 
 void BWindow::setupSceneHandler() {
@@ -67,16 +72,6 @@ void BWindow::setupSceneHandler() {
  */
 void BWindow::overrideFile(std::string file) {
 	fileLocation = file;
-}
-
-void BWindow::draw() {
-	SDL_RenderClear(renderer);
-
-	for(auto &i : scenehandler.getAll()) {
-		//i.second->loop();
-	}
-
-	SDL_RenderPresent(renderer);
 }
 
 void BWindow::quit() {

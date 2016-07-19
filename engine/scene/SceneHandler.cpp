@@ -1,17 +1,13 @@
 #include "SceneHandler.h"
 
+std::string SceneHandler::currentScene = std::string();
+
 SceneHandler::SceneHandler(SDL_Renderer *renderer) {
 	setRenderer(renderer);
 }
 
 void SceneHandler::setRenderer(SDL_Renderer *renderer) {
 	this->renderer = renderer;
-
-	isOperational = true;
-}
-
-void SceneHandler::add(std::string name, Scene *scene) {
-	scenes.insert(std::make_pair(name, scenePtr(scene)));
 }
 
 /**
@@ -19,12 +15,21 @@ void SceneHandler::add(std::string name, Scene *scene) {
  * Renderer must be assigned
  */
 void SceneHandler::init() {
-	if(isOperational) {
+	if(renderer != NULL) {
+		/**
+		 * Declare scenes
+		 */
 		add("main", new MainScene());
 
+		/**
+		 * Setup scenes automatically
+		 */
 		for (auto &i : getAll()) {
 			i.second->setup();
 		}
+
+		// Set default scene
+		set("main");
 	} else {
 		ErrorLog el("scenes");
 		el.write("SceneHandler::renderer not set");
@@ -32,12 +37,50 @@ void SceneHandler::init() {
 	}
 }
 
+void SceneHandler::add(std::string name, Scene *scene) {
+	scenes.insert(std::make_pair(name, scenePtr(scene)));
+}
+
+void SceneHandler::set(std::string name) {
+	currentScene = name;
+}
+
+void SceneHandler::events(SDL_Event *e) {
+	/**
+	 * Loop through all scenes, find
+	 * the current scene and listen
+	 * for input
+	 */
+	for(auto &i : getAll()) {
+		if(i.second->getSceneName() == getCurrentScene()) {
+			i.second->inputListener(e);
+		}
+	}
+}
+
+void SceneHandler::update() {
+	/**
+	 * Lopo through all scenes, find
+	 * the current scene update
+	 * the scene
+	 */
+	for(auto &i : getAll()) {
+		if(i.second->getSceneName() == getCurrentScene()) {
+			i.second->update();
+		}
+	}
+}
+
+std::string SceneHandler::getCurrentScene() {
+	return currentScene;
+}
+
 Scene& SceneHandler::get(std::string name) {
 	auto position = scenes.find(name);
 	
 	if(position == scenes.end()) {
 		ErrorLog el("scenes");
-		el.write("SceneHandler::scene could not be found");
+		el.write("SceneHandler::scene could not be found...RETURNED " + name);
 		el.close();
 	}
 

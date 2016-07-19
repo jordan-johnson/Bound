@@ -9,7 +9,5 @@ void GameApplication::init() {
 void GameApplication::loop() {
 	while(gameWindow.isOpen) {
 		gameWindow.eventListener();
-
-		gameWindow.draw();
 	}
 }

@@ -16,15 +16,22 @@ class SceneHandler {
 private:
 	sceneMap scenes;
 	SDL_Renderer *renderer;
-	bool isOperational = false;
+	static std::string currentScene;
 public:
 	SceneHandler(){};
 	SceneHandler(SDL_Renderer *renderer);
 
 	void setRenderer(SDL_Renderer *renderer);
-	void add(std::string name, Scene *scene);
-	void init();
 
+	void init();
+	void events(SDL_Event *e);
+	void update();
+
+	void add(std::string name, Scene *scene);
+
+	static void set(std::string name);
+
+	std::string getCurrentScene();
 	Scene& get(std::string name);
 	sceneMap& getAll();
 };
