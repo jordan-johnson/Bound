@@ -17,7 +17,7 @@ private:
 
 	SceneHandler scenehandler;
 
-	Vector2u windowSize;
+	Vector2<unsigned int> windowSize;
 	SDL_WindowFlags winFlag;
 
 	// Location of JSON file

@@ -1,18 +1,8 @@
 #ifndef __VECTOR_H__
 #define __VECTOR_H__
 
-struct Vector2f {
+template<class t> class Vector2 {
 public:
-	float x, y;
+	t x, y;
 };
-
-struct Vector2i {
-public:
-	int x, y;
-};
-
-struct Vector2u {
-	unsigned int x, y;
-};
-
 #endif

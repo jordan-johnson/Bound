@@ -8,6 +8,7 @@
 #include "../systemtools/ErrorLog.h"
 
 #include "scenes/MainScene.h"
+#include "scenes/GameScene.h"
 
 typedef std::unique_ptr<Scene> scenePtr;
 typedef std::map<std::string, scenePtr> sceneMap;

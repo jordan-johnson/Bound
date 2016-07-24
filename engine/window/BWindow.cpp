@@ -7,6 +7,7 @@ void BWindow::create(std::string title) {
 	ErrorLog windowErrorLog("window");
 
 	SDL_Init(SDL_INIT_EVERYTHING);
+	IMG_Init(IMG_INIT_PNG);
 
 	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, winFlag);
 
@@ -79,6 +80,7 @@ void BWindow::quit() {
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	IMG_Quit();
 	SDL_Quit();
 }
 

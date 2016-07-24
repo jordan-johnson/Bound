@@ -12,11 +12,11 @@ public:
 		active, inactive
 	};
 
-	void checkStatus(Vector2f mousePosition, bool clicked = false);
+	void checkStatus(Vector2<float> mousePosition, bool clicked = false);
 
 	void setStatus(statusTypes type);
 
-	void setAction(ButtonAction *action);
+	void setAction(ButtonAction *action, std::string argument);
 
 	statusTypes& getStatus();
 private:

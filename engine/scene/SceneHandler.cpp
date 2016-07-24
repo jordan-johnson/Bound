@@ -19,12 +19,15 @@ void SceneHandler::init() {
 		/**
 		 * Declare scenes
 		 */
+
 		add("main", new MainScene());
+		add("game", new GameScene());
 
 		/**
 		 * Setup scenes automatically
 		 */
 		for (auto &i : getAll()) {
+			i.second->setRenderer(renderer);
 			i.second->setup();
 		}
 
@@ -37,14 +40,23 @@ void SceneHandler::init() {
 	}
 }
 
+/**
+ * Add scene to list
+ */
 void SceneHandler::add(std::string name, Scene *scene) {
 	scenes.insert(std::make_pair(name, scenePtr(scene)));
 }
 
+/**
+ * Set current scene
+ */
 void SceneHandler::set(std::string name) {
 	currentScene = name;
 }
 
+/**
+ * Update events on current scene
+ */
 void SceneHandler::events(SDL_Event *e) {
 	/**
 	 * Loop through all scenes, find
@@ -58,9 +70,14 @@ void SceneHandler::events(SDL_Event *e) {
 	}
 }
 
+/**
+ * Update current scene
+ */
 void SceneHandler::update() {
+	SDL_RenderClear(renderer);
+
 	/**
-	 * Lopo through all scenes, find
+	 * Loop through all scenes, find
 	 * the current scene update
 	 * the scene
 	 */
@@ -69,12 +86,17 @@ void SceneHandler::update() {
 			i.second->update();
 		}
 	}
+
+	SDL_RenderPresent(renderer);
 }
 
 std::string SceneHandler::getCurrentScene() {
 	return currentScene;
 }
 
+/**
+ * Get scene
+ */
 Scene& SceneHandler::get(std::string name) {
 	auto position = scenes.find(name);
 	
@@ -87,6 +109,9 @@ Scene& SceneHandler::get(std::string name) {
 	return *position->second;
 }
 
+/**
+ * Get all scenes
+ */
 sceneMap& SceneHandler::getAll() {
 	return scenes;
 }

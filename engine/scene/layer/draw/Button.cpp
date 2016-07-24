@@ -4,22 +4,24 @@ Button::Button() {
 	status = statusTypes::inactive;
 }
 
-void Button::checkStatus(Vector2f mousePosition, bool clicked) {
-	if((mousePosition.x > position.x) && (mousePosition.x < position.x + size.x) &&
-	(mousePosition.y > position.y) && (mousePosition.y < position.y + size.y)) {
+void Button::checkStatus(Vector2<float> mousePosition, bool clicked) {
+	if((mousePosition.x > getRect().x) && (mousePosition.x < getRect().x + getRect().w) &&
+	(mousePosition.y > getRect().y) && (mousePosition.y < getRect().y + getRect().h)) {
 		setStatus(statusTypes::active);
 
 		// Check if clicked
 		if(clicked && action != nullptr) {
-			//action.perform();
+			std::cout << "called";
+			action->perform();
 		}
 	} else {
 		setStatus(statusTypes::inactive);
 	}
 }
 
-void Button::setAction(ButtonAction *action) {
+void Button::setAction(ButtonAction *action, std::string argument) {
 	this->action = action;
+	this->action->argument = argument;
 }
 
 void Button::setStatus(Button::statusTypes type) {

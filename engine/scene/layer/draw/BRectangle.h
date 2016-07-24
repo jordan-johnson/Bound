@@ -5,7 +5,7 @@
 
 class BRectangle : public Drawable {
 public:
-	virtual void create(Vector2f position, Vector2u size);
+	virtual void create(Vector2<float> position, Vector2<unsigned int> size);
 };
 
 #endif

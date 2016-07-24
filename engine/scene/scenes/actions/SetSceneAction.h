@@ -6,8 +6,6 @@
 
 class SetSceneAction : public ButtonAction {
 public:
-	std::string sceneName;
-
 	virtual void perform() override;
 };
 
