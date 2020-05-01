@@ -9,9 +9,8 @@ namespace Bound.Graphics
         int Width { get; }
         int Height { get; }
         bool IsOpen { get; }
-
+        
         void Create();
-        void PollEvents();
-        void CloseWindow();
+        void Destroy();
     }
 }

@@ -5,8 +5,6 @@ namespace Bound.Graphics
 {
     public class Window : IWindow
     {
-        private SDL.SDL_Event _eventHandler;
-
         public IntPtr WindowHandler { get; private set; }
         public string Title { get; private set; }
         public int Width { get; private set; }
@@ -38,22 +36,17 @@ namespace Bound.Graphics
             IsOpen = WindowHandler != IntPtr.Zero;
         }
 
-        public void PollEvents()
+        public void Update()
         {
-            while(SDL.SDL_PollEvent(out _eventHandler) != 0)
-            {
-                switch(_eventHandler.type)
-                {
-                    case SDL.SDL_EventType.SDL_QUIT:
-                        IsOpen = false;
-                    break;
-                }
-            }
+            
         }
 
-        public void CloseWindow()
+        public void Destroy()
         {
             SDL.SDL_DestroyWindow(WindowHandler);
+
+            IsOpen = false;
+            
         }
     }
 }

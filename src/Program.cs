@@ -1,17 +1,16 @@
 ﻿using System;
-using Bound.Startup;
 
 namespace Bound
 {
     static class Program
     {
-        private static IStartup _applicationBoot;
+        private static IApplication _application;
 
         static void Main(string[] args)
         {
-            _applicationBoot = new BoundStartup();
-            _applicationBoot.Initialize();
-            _applicationBoot.Run();
+            _application = new BoundApplication();
+            _application.Initialize();
+            _application.Run();
         }
     }
 }

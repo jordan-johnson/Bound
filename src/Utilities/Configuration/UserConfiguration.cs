@@ -26,7 +26,7 @@ namespace Bound.Utilities.Configuration
 
         public void Load()
         {
-
+            Defaults();
         }
 
         private void Defaults()

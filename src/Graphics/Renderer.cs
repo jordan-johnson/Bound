@@ -6,14 +6,14 @@ namespace Bound.Graphics
 {
     public class Renderer : IRenderer
     {
-        private IWindow _window;
+        private IntPtr _windowHandler;
 
         public IntPtr RendererHandler { get; private set; }
         public List<IDrawable> Drawables { get; private set; }
 
-        public Renderer(IWindow window)
+        public Renderer(IntPtr windowHandler)
         {
-            _window = window;
+            _windowHandler = windowHandler;
 
             RendererHandler = IntPtr.Zero;
             Drawables = new List<IDrawable>();
@@ -21,10 +21,10 @@ namespace Bound.Graphics
 
         public void Create()
         {
-            if(_window == null || _window.WindowHandler == IntPtr.Zero)
+            if(_windowHandler == IntPtr.Zero)
                 return;
 
-            RendererHandler = SDL.SDL_CreateRenderer(_window.WindowHandler, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+            RendererHandler = SDL.SDL_CreateRenderer(_windowHandler, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
         }
 
         public void Draw()
@@ -35,6 +35,11 @@ namespace Bound.Graphics
                 SDL.SDL_Rect pos = drawable.Position;
                 SDL.SDL_RenderCopy(RendererHandler, drawable.Texture, ref crop, ref pos);
             }
+        }
+
+        public void Destroy()
+        {
+            SDL.SDL_DestroyRenderer(RendererHandler);
         }
     }
 }

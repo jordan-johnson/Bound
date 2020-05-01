@@ -11,5 +11,6 @@ namespace Bound.Graphics
 
         void Create();
         void Draw();
+        void Destroy();
     }
 }
