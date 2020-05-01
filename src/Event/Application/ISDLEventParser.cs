@@ -1,9 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace Bound.Event
+namespace Bound.Event.Application
 {
-    public interface IEventHandler
+    public interface ISDLEventParser
     {
         void PollEvents();
         void ClearEvents();

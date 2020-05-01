@@ -9,7 +9,7 @@ namespace Bound
         static void Main(string[] args)
         {
             _application = new BoundApplication();
-            _application.Initialize();
+            _application.Initialize(true);
             _application.Run();
         }
     }

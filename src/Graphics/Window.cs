@@ -9,7 +9,6 @@ namespace Bound.Graphics
         public string Title { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public bool IsOpen { get; private set; }
 
         public Window(string title, int width, int height)
         {
@@ -32,21 +31,11 @@ namespace Bound.Graphics
                 Height,
                 SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE
             );
-
-            IsOpen = WindowHandler != IntPtr.Zero;
-        }
-
-        public void Update()
-        {
-            
         }
 
         public void Destroy()
         {
             SDL.SDL_DestroyWindow(WindowHandler);
-
-            IsOpen = false;
-            
         }
     }
 }

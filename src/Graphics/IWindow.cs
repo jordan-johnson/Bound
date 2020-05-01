@@ -8,7 +8,6 @@ namespace Bound.Graphics
         string Title { get; }
         int Width { get; }
         int Height { get; }
-        bool IsOpen { get; }
         
         void Create();
         void Destroy();

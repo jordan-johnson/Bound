@@ -5,13 +5,16 @@ namespace Bound.Utilities.Configuration
 {
     public class UserConfiguration : IConfiguration
     {
+        private bool _debug;
         private Dictionary<int, int> _resolutions;
         
         public int WindowWidth { get; private set; }
         public int WindowHeight { get; private set; }
 
-        public UserConfiguration()
+        public UserConfiguration(bool debugging)
         {
+            _debug = debugging;
+            
             _resolutions = new Dictionary<int, int>
             {
                 {3840, 2160},

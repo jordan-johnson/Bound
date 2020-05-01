@@ -1,57 +1,63 @@
 using System;
-using SDL2;
+using System.Linq;
+using System.Collections.Generic;
 using Bound.Event;
-using Bound.Graphics;
-using Bound.Graphics.Scene;
-using Bound.Utilities.Configuration;
 using Bound.Event.Application;
+using Bound.MediaLibrary;
+using Bound.Utilities.Configuration;
 using State = Bound.Event.Application.ApplicationState.States;
 
 namespace Bound
 {
     /// <summary>
-    /// BoundApplication handles the lifespan and basic functionality of the application, 
-    /// such as the window, renderer, configuration, and events.
+    /// BoundApplication connects subsystems for basic application functionality. Such things
+    /// would include application configuration, window/renderer creation, event handling, and 
+    /// initializing the game manager.
+    /// 
+    /// It's important to recognize the distinction between this class and the Game Manager (GM).
+    /// The GM is a modular subsystem for creating scenes, parsing events (provided by this class), 
+    /// and other game-related functionality. BoundApplication is the bootstrap.
     /// </summary>
     public class BoundApplication : IApplication
     {
-        private IWindow _window;
-        private IRenderer _renderer;
+        private ISDLHandler _sdl;
         private IConfiguration _config;
-        private IEventHandler _eventHandler;
         private IGameManager _game;
 
-        public void Initialize()
+        public void Initialize(bool debugging = false)
         {
-            _config = new UserConfiguration();
+            _config = new UserConfiguration(debugging);
             _config.Load();
-            
-            _eventHandler = new Event.EventHandler();
 
-            SDL.SDL_Init(SDL.SDL_INIT_VIDEO);
+            _sdl = new SDLHander(_config);
+            _sdl.Initialize();
 
-            CreateWindow();
-            CreateRenderer();
-            CreateGameManager();
+            _game = new GameManager();
         }
 
         public void Run()
         {
-            while(_window.IsOpen)
+            while(_sdl.IsRunning)
             {
-                _eventHandler.PollEvents();
+                _sdl.PollEvents();
 
-                CheckApplicationState();
+                Update(_sdl.Events);
 
-                _game.Update(_eventHandler.GetEvents());
-                // game manager ...
-                _eventHandler.ClearEvents();
+                _sdl.ClearEvents();
             }
+        }
+
+        // update with delta ...
+        private void Update(IEnumerable<IBoundEvent> events)
+        {
+            _game?.Update(events);
+            
+            CheckApplicationState();
         }
 
         private void CheckApplicationState()
         {
-            var state = (ApplicationState)_eventHandler.GetFirstInstanceOf<ApplicationState>();
+            var state = (ApplicationState)_sdl.Events.FirstOrDefault(x => x.GetType() == typeof(ApplicationState));
 
             if(state == null)
                 return;
@@ -60,46 +66,16 @@ namespace Bound
             {
                 case State.Closing:
                     Console.WriteLine("closing");
+
                     Quit();
                 break;
             }
         }
 
-        private void CreateWindow()
-        {
-            if(_config == null)
-            {
-                // log config warning and create new...
-            }
-
-            _window = new Window("Bound", _config.WindowWidth, _config.WindowHeight);
-            _window.Create();
-        }
-
-        private void CreateRenderer()
-        {
-            if(_window == null || _window.WindowHandler == IntPtr.Zero)
-            {
-                Console.WriteLine("test");
-                // log window creation error and quit...
-                Quit();
-            }
-
-            _renderer = new Renderer(_window.WindowHandler);
-            _renderer.Create();
-        }
-
-        private void CreateGameManager()
-        {
-            _game = new GameManager();
-        }
-
         private void Quit()
         {
-            _renderer?.Destroy();
-            _window?.Destroy();
-            
-            SDL.SDL_Quit();
+            _game?.Destroy();
+            _sdl?.Quit();
         }
     }
 }

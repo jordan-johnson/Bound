@@ -6,14 +6,18 @@ using SDL2;
 using Bound.Event.Application;
 using State = Bound.Event.Application.ApplicationState.States;
 
-namespace Bound.Event
+namespace Bound.Event.Application
 {
-    public class EventHandler : IEventHandler
+    /// <summary>
+    /// The EventHandler class is a low-level event parser. Events are interpreted and pushed 
+    /// into a collection of IBoundEvent for high-level parsing.
+    /// </summary>
+    public class SDLEventParser : ISDLEventParser
     {
         private SDL.SDL_Event _sdlEvent;
         private List<IBoundEvent> _events;
 
-        public EventHandler()
+        public SDLEventParser()
         {
             _events = new List<IBoundEvent>();
         }
