@@ -8,7 +8,7 @@ using Bound.Utilities.Configuration;
 
 namespace Bound.MediaLibrary
 {
-    public class SDLHander : ISDLHandler
+    public class SDLHandler : ISDLHandler
     {
         private IConfiguration _config;
         private IWindow _window;
@@ -25,7 +25,7 @@ namespace Bound.MediaLibrary
             }
         }
 
-        public SDLHander(IConfiguration config)
+        public SDLHandler(IConfiguration config)
         {
             _config = config;
             _eventParser = new SDLEventParser();

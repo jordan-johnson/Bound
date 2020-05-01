@@ -29,7 +29,7 @@ namespace Bound
             _config = new UserConfiguration(debugging);
             _config.Load();
 
-            _sdl = new SDLHander(_config);
+            _sdl = new SDLHandler(_config);
             _sdl.Initialize();
 
             _game = new GameManager();
@@ -51,7 +51,7 @@ namespace Bound
         private void Update(IEnumerable<IBoundEvent> events)
         {
             _game?.Update(events);
-            
+
             CheckApplicationState();
         }
 
