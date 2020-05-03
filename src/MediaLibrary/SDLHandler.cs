@@ -5,6 +5,7 @@ using Bound.Event;
 using Bound.Event.Application;
 using Bound.Graphics;
 using Bound.Utilities.Configuration;
+using Bound.Utilities.Timing;
 
 namespace Bound.MediaLibrary
 {
@@ -14,21 +15,17 @@ namespace Bound.MediaLibrary
         private IWindow _window;
         private IRenderer _renderer;
         private ISDLEventParser _eventParser;
+        private ITimer _timer;
 
         public bool IsRunning { get; private set; }
-
-        public IEnumerable<IBoundEvent> Events
-        {
-            get
-            {
-                return _eventParser.GetEvents();
-            }
-        }
+        public double DeltaTime => _timer.DeltaTime;
+        public IEnumerable<IBoundEvent> Events => _eventParser.GetEvents();
 
         public SDLHandler(IConfiguration config)
         {
             _config = config;
             _eventParser = new SDLEventParser();
+            _timer = new Timer();
         }
 
         public void Initialize()
@@ -60,6 +57,11 @@ namespace Bound.MediaLibrary
 
         public void PollEvents() => _eventParser.PollEvents();
         public void ClearEvents() => _eventParser.ClearEvents();
+
+        public void Update()
+        {
+            _timer.Update();
+        }
 
         public void Quit()
         {

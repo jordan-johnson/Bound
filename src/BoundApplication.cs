@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Bound.Game;
 using Bound.Event;
 using Bound.Event.Application;
 using Bound.MediaLibrary;
@@ -39,18 +40,19 @@ namespace Bound
         {
             while(_sdl.IsRunning)
             {
+                _sdl.Update();
                 _sdl.PollEvents();
 
-                Update(_sdl.Events);
+                Update(_sdl.DeltaTime, _sdl.Events);
 
                 _sdl.ClearEvents();
             }
         }
 
         // update with delta ...
-        private void Update(IEnumerable<IBoundEvent> events)
+        private void Update(double deltaTime, IEnumerable<IBoundEvent> events)
         {
-            _game?.Update(events);
+            _game?.Update(deltaTime, events);
 
             CheckApplicationState();
         }

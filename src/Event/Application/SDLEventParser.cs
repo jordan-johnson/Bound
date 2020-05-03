@@ -28,6 +28,12 @@ namespace Bound.Event.Application
             {
                 switch(_sdlEvent.type)
                 {
+                    case SDL.SDL_EventType.SDL_KEYDOWN:
+                    case SDL.SDL_EventType.SDL_KEYUP:
+                        var key = _sdlEvent.key;
+                        
+                        _events.Add(new KeyChangeEvent(key.keysym.sym, key.state));
+                    break;
                     case SDL.SDL_EventType.SDL_QUIT:
                         _events.Add(new ApplicationState(State.Closing));
                     break;
