@@ -17,6 +17,8 @@ namespace Bound.Event.Application
         private SDL.SDL_Event _sdlEvent;
         private List<IBoundEvent> _events;
 
+        public IEnumerable<IBoundEvent> Events => _events.AsReadOnly();
+
         public SDLEventParser()
         {
             _events = new List<IBoundEvent>();
@@ -46,21 +48,21 @@ namespace Bound.Event.Application
             _events.Clear();
         }
 
-        public ReadOnlyCollection<IBoundEvent> GetEvents()
-        {
-            return _events.ToList().AsReadOnly();
-        }
+        // public ReadOnlyCollection<IBoundEvent> GetEvents()
+        // {
+        //     return _events.ToList().AsReadOnly();
+        // }
 
-        public ReadOnlyCollection<IBoundEvent> GetEventsOfType<T>() where T : IBoundEvent
-        {
-            var eventsOfType = _events?.Where(x => x.GetType() == typeof(T));
+        // public ReadOnlyCollection<IBoundEvent> GetEventsOfType<T>() where T : IBoundEvent
+        // {
+        //     var eventsOfType = _events?.Where(x => x.GetType() == typeof(T));
 
-            return eventsOfType.ToList().AsReadOnly();
-        }
+        //     return eventsOfType.ToList().AsReadOnly();
+        // }
 
-        public IBoundEvent GetFirstInstanceOf<T>() where T : IBoundEvent
-        {
-            return GetEventsOfType<T>().FirstOrDefault();
-        }
+        // public IBoundEvent GetFirstInstanceOf<T>() where T : IBoundEvent
+        // {
+        //     return GetEventsOfType<T>().FirstOrDefault();
+        // }
     }
 }

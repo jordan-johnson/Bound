@@ -4,13 +4,12 @@ using SDL2;
 
 namespace Bound.Graphics
 {
-    public interface IRenderer
+    public interface IRenderer : IDraw
     {
         IntPtr RendererHandler { get; }
         List<IDrawable> Drawables { get; }
 
         void Create();
-        void Draw();
         void Destroy();
     }
 }

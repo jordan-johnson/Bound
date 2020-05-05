@@ -40,21 +40,15 @@ namespace Bound
         {
             while(_sdl.IsRunning)
             {
-                _sdl.Update();
+                _sdl.UpdateTime();
                 _sdl.PollEvents();
+                _game.Update(_sdl.DeltaTime, _sdl.Events);
+                _sdl.Draw(_game.Drawables);
 
-                Update(_sdl.DeltaTime, _sdl.Events);
+                CheckApplicationState();
 
                 _sdl.ClearEvents();
             }
-        }
-
-        // update with delta ...
-        private void Update(double deltaTime, IEnumerable<IBoundEvent> events)
-        {
-            _game?.Update(deltaTime, events);
-
-            CheckApplicationState();
         }
 
         private void CheckApplicationState()

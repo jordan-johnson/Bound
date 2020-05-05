@@ -18,7 +18,7 @@ namespace Bound.Utilities.Timing
             DeltaTime = 0;
         }
 
-        public void Update()
+        public void UpdateTime()
         {
             _last = _current;
             _current = SDL.SDL_GetPerformanceCounter();

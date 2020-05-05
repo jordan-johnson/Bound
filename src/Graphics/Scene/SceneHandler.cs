@@ -7,13 +7,11 @@ namespace Bound.Graphics.Scene
     public class SceneHandler : ISceneHandler
     {
         private IScene _currentScene;
-        private List<IDrawable> _drawables;
         private List<IScene> _scenes;
 
-        public SceneHandler(List<IDrawable> drawables)
+        public SceneHandler()
         {
             _scenes = new List<IScene>();
-            _drawables = drawables;
         }
 
         public void AddScene(IScene scene)
@@ -21,6 +19,14 @@ namespace Bound.Graphics.Scene
             _scenes.Add(scene);
 
             scene.Initialize();
+        }
+
+        public void AddScenes(IEnumerable<IScene> scenes)
+        {
+            foreach(var scene in scenes)
+            {
+                AddScene(scene);
+            }
         }
 
         public void SetScene(IScene scene)
@@ -52,7 +58,7 @@ namespace Bound.Graphics.Scene
 
         private void DisposeCurrentScene()
         {
-            _drawables.Clear();
+            // _drawables.Clear();
 
             _currentScene.Dispose();
         }
@@ -61,7 +67,7 @@ namespace Bound.Graphics.Scene
         {
             foreach(var layer in scene.Layers.OrderBy(x => x.ZAxisOrder))
             {
-                _drawables.AddRange(layer.Drawables);
+                // _drawables.AddRange(layer.Drawables);
             }
         }
     }

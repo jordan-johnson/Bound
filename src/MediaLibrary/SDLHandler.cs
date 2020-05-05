@@ -19,7 +19,7 @@ namespace Bound.MediaLibrary
 
         public bool IsRunning { get; private set; }
         public double DeltaTime => _timer.DeltaTime;
-        public IEnumerable<IBoundEvent> Events => _eventParser.GetEvents();
+        public IEnumerable<IBoundEvent> Events => _eventParser.Events;
 
         public SDLHandler(IConfiguration config)
         {
@@ -30,37 +30,17 @@ namespace Bound.MediaLibrary
 
         public void Initialize()
         {
-            if(_config == null || _config.WindowHeight == 0 || _config.WindowHeight == 0)
-            {
-                // log error
-
-                return;
-            }
+            _config.ThrowIfInvalidConfiguration();
 
             SDL.SDL_Init(SDL.SDL_INIT_VIDEO);
 
             _window = new Window("Bound", _config.WindowWidth, _config.WindowHeight);
             _window.Create();
 
-            if(_window == null || _window.WindowHandler == IntPtr.Zero)
-            {
-                // log error
-
-                return;
-            }
-
             _renderer = new Renderer(_window.WindowHandler);
             _renderer.Create();
 
             IsRunning = _window.WindowHandler != IntPtr.Zero && _renderer.RendererHandler != IntPtr.Zero;
-        }
-
-        public void PollEvents() => _eventParser.PollEvents();
-        public void ClearEvents() => _eventParser.ClearEvents();
-
-        public void Update()
-        {
-            _timer.Update();
         }
 
         public void Quit()
@@ -72,5 +52,10 @@ namespace Bound.MediaLibrary
             
             SDL.SDL_Quit();
         }
+
+        public void PollEvents() => _eventParser.PollEvents();
+        public void ClearEvents() => _eventParser.ClearEvents();
+        public void UpdateTime() => _timer.UpdateTime();
+        public void Draw(IEnumerable<IDrawable> drawables) => _renderer.Draw(drawables);
     }
 }

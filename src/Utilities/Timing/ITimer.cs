@@ -6,6 +6,6 @@ namespace Bound.Utilities.Timing
     {
         double DeltaTime { get; }
 
-        void Update();
+        void UpdateTime();
     }
 }

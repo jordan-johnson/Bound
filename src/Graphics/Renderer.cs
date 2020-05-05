@@ -25,11 +25,14 @@ namespace Bound.Graphics
                 return;
 
             RendererHandler = SDL.SDL_CreateRenderer(_windowHandler, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+
+            if(RendererHandler == IntPtr.Zero)
+                throw new Exception($"Renderer could not be created! {SDL.SDL_GetError()}");
         }
 
-        public void Draw()
+        public void Draw(IEnumerable<IDrawable> drawables)
         {
-            foreach(var drawable in Drawables)
+            foreach(var drawable in drawables)
             {
                 SDL.SDL_Rect crop = drawable.Crop;
                 SDL.SDL_Rect pos = drawable.Position;

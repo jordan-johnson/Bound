@@ -4,30 +4,32 @@ using System.Collections.Generic;
 using Bound.Event;
 using Bound.Event.Game;
 using Bound.Event.Application;
+using Bound.Graphics;
+using Bound.Graphics.Scene;
 
 namespace Bound.Game
 {
     public class GameManager : IGameManager
     {
         private IBoundEventParser _eventParser;
+        private ISceneHandler _sceneHandler;
+
+        public IEnumerable<IDrawable> Drawables { get; private set; }
 
         public GameManager()
         {
+            Drawables = new List<IDrawable>();
             _eventParser = new BoundEventParser();
+            _sceneHandler = new SceneHandler();
+
+            // _sceneHandler.AddScenes(new IScene[] {
+            //     new MainMenuScene()
+            // });
         }
 
         public void Update(double deltaTime, IEnumerable<IBoundEvent> events)
         {
-            // testing key change event (will be removed)
-            foreach(var e in events)
-            {
-                if(e.GetType() == typeof(KeyChangeEvent))
-                {
-                    var kce = (KeyChangeEvent)e;
-
-                    Console.WriteLine(kce.KeycodeAsString + "/" + kce.State);
-                }
-            }
+            
         }
 
         public void Destroy()

@@ -31,6 +31,9 @@ namespace Bound.Graphics
                 Height,
                 SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE
             );
+
+            if(WindowHandler == IntPtr.Zero)
+                throw new Exception($"Window could not be created! {SDL.SDL_GetError()}");
         }
 
         public void Destroy()

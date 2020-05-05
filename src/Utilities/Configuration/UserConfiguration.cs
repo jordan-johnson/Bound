@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Bound.Utilities.Configuration
@@ -30,6 +31,15 @@ namespace Bound.Utilities.Configuration
         public void Load()
         {
             Defaults();
+        }
+
+        public void ThrowIfInvalidConfiguration()
+        {
+            var resolutionExists = _resolutions.Contains(new KeyValuePair<int, int>(WindowWidth, WindowHeight));
+            if(!resolutionExists)
+            {
+                throw new Exception($"Resolution not supported! {WindowWidth}x{WindowHeight}");
+            }
         }
 
         private void Defaults()

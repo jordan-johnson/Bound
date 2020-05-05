@@ -8,5 +8,6 @@ namespace Bound.Utilities.Configuration
         int WindowHeight { get; }
 
         void Load();
+        void ThrowIfInvalidConfiguration();
     }
 }
