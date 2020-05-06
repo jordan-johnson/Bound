@@ -5,6 +5,7 @@ namespace Bound.Graphics.Scene
 {
     public class MainMenuScene : IScene
     {
+        public int? Id => null;
         public string Name => "main";
 
         public IEnumerable<ILayer> Layers => throw new NotImplementedException();

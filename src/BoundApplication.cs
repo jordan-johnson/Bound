@@ -1,12 +1,8 @@
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using Bound.Game;
-using Bound.Event;
 using Bound.Event.Application;
 using Bound.MediaLibrary;
 using Bound.Utilities.Configuration;
-using State = Bound.Event.Application.ApplicationState.States;
 
 namespace Bound
 {
@@ -42,7 +38,7 @@ namespace Bound
             {
                 _sdl.UpdateTime();
                 _sdl.PollEvents();
-                _game.Update(_sdl.DeltaTime, _sdl.Events);
+                _game.Update(_sdl.DeltaTime, _sdl.Events.GetAll());
                 _sdl.Draw(_game.Drawables);
 
                 CheckApplicationState();
@@ -53,14 +49,14 @@ namespace Bound
 
         private void CheckApplicationState()
         {
-            var state = (ApplicationState)_sdl.Events.FirstOrDefault(x => x.GetType() == typeof(ApplicationState));
+            var state = (ApplicationState)_sdl.Events.GetFirstInstanceOfType<ApplicationState>();
 
             if(state == null)
                 return;
 
             switch(state.CurrentState)
             {
-                case State.Closing:
+                case States.Closing:
                     Console.WriteLine("closing");
 
                     Quit();

@@ -10,7 +10,7 @@ namespace Bound.Event.Application
         public SDL.SDL_Keycode Keycode { get; private set; }
         public string KeycodeAsString { get; private set; }
 
-        public bool State
+        public bool Pressed
         {
             get
             {

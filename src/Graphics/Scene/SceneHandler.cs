@@ -16,6 +16,8 @@ namespace Bound.Graphics.Scene
 
         public void AddScene(IScene scene)
         {
+            // assign scene id ...
+            
             _scenes.Add(scene);
 
             scene.Initialize();

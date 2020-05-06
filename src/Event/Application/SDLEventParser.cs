@@ -1,10 +1,4 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using SDL2;
-using Bound.Event.Application;
-using State = Bound.Event.Application.ApplicationState.States;
 
 namespace Bound.Event.Application
 {
@@ -15,13 +9,12 @@ namespace Bound.Event.Application
     public class SDLEventParser : ISDLEventParser
     {
         private SDL.SDL_Event _sdlEvent;
-        private List<IBoundEvent> _events;
 
-        public IEnumerable<IBoundEvent> Events => _events.AsReadOnly();
+        public EventsCollection Events { get; private set; }
 
         public SDLEventParser()
         {
-            _events = new List<IBoundEvent>();
+            Events = new EventsCollection();
         }
 
         public void PollEvents()
@@ -34,10 +27,10 @@ namespace Bound.Event.Application
                     case SDL.SDL_EventType.SDL_KEYUP:
                         var key = _sdlEvent.key;
                         
-                        _events.Add(new KeyChangeEvent(key.keysym.sym, key.state));
+                        Events.Add(new KeyChangeEvent(key.keysym.sym, key.state));
                     break;
                     case SDL.SDL_EventType.SDL_QUIT:
-                        _events.Add(new ApplicationState(State.Closing));
+                        Events.Add(new ApplicationState(States.Closing));
                     break;
                 }
             }
@@ -45,24 +38,7 @@ namespace Bound.Event.Application
 
         public void ClearEvents()
         {
-            _events.Clear();
+            Events.ClearAll();
         }
-
-        // public ReadOnlyCollection<IBoundEvent> GetEvents()
-        // {
-        //     return _events.ToList().AsReadOnly();
-        // }
-
-        // public ReadOnlyCollection<IBoundEvent> GetEventsOfType<T>() where T : IBoundEvent
-        // {
-        //     var eventsOfType = _events?.Where(x => x.GetType() == typeof(T));
-
-        //     return eventsOfType.ToList().AsReadOnly();
-        // }
-
-        // public IBoundEvent GetFirstInstanceOf<T>() where T : IBoundEvent
-        // {
-        //     return GetEventsOfType<T>().FirstOrDefault();
-        // }
     }
 }

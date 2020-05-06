@@ -32,12 +32,17 @@ namespace Bound.Graphics
 
         public void Draw(IEnumerable<IDrawable> drawables)
         {
+            SDL.SDL_RenderClear(RendererHandler);
+
             foreach(var drawable in drawables)
             {
                 SDL.SDL_Rect crop = drawable.Crop;
                 SDL.SDL_Rect pos = drawable.Position;
+                
                 SDL.SDL_RenderCopy(RendererHandler, drawable.Texture, ref crop, ref pos);
             }
+
+            SDL.SDL_RenderPresent(RendererHandler);
         }
 
         public void Destroy()

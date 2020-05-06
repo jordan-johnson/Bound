@@ -19,7 +19,7 @@ namespace Bound.MediaLibrary
 
         public bool IsRunning { get; private set; }
         public double DeltaTime => _timer.DeltaTime;
-        public IEnumerable<IBoundEvent> Events => _eventParser.Events;
+        public EventsCollection Events => _eventParser.Events;
 
         public SDLHandler(IConfiguration config)
         {
