@@ -5,7 +5,7 @@ namespace Bound
 {
     public interface IApplication
     {
-        void Initialize(bool debugging = false);
+        void Initialize(bool debugging);
         void Run();
     }
 }

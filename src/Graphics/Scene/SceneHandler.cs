@@ -1,11 +1,14 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Serilog;
+using Bound.Event;
 
 namespace Bound.Graphics.Scene
 {
     public class SceneHandler : ISceneHandler
     {
+        private EventsCollection _events;
         private IScene _currentScene;
         private List<IScene> _scenes;
 
@@ -16,8 +19,6 @@ namespace Bound.Graphics.Scene
 
         public void AddScene(IScene scene)
         {
-            // assign scene id ...
-            
             _scenes.Add(scene);
 
             scene.Initialize();
@@ -33,17 +34,7 @@ namespace Bound.Graphics.Scene
 
         public void SetScene(IScene scene)
         {
-            if(_scenes.Contains(scene))
-            {
-                DisposeCurrentScene();
-                SetDrawablesUsingLayers(scene);
-
-                _currentScene = scene;
-            }
-            else
-            {
-                // TODO: log unknown source of scene, scene needs to be setup first
-            }
+            
         }
 
         public void SetSceneByName(string sceneName)
@@ -53,24 +44,24 @@ namespace Bound.Graphics.Scene
             SetScene(scene);
         }
 
-        public void Update()
+        public void Update(double deltaTime, EventsCollection events)
         {
             
         }
 
-        private void DisposeCurrentScene()
+        public IEnumerable<Drawable> GetDrawables()
         {
-            // _drawables.Clear();
+            if(_currentScene == null)
+                return null;
 
-            _currentScene.Dispose();
-        }
+            var drawables = new List<Drawable>();
 
-        private void SetDrawablesUsingLayers(IScene scene)
-        {
-            foreach(var layer in scene.Layers.OrderBy(x => x.ZAxisOrder))
+            foreach(var layer in _currentScene?.Layers?.OrderBy(x => x.ZAxisOrder))
             {
-                // _drawables.AddRange(layer.Drawables);
+                drawables.AddRange(layer.Drawables);
             }
+
+            return drawables;
         }
     }
 }

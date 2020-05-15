@@ -7,7 +7,7 @@ namespace Bound.Utilities.Configuration
         int WindowWidth { get; }
         int WindowHeight { get; }
 
-        void Load();
+        void Initialize();
         void ThrowIfInvalidConfiguration();
     }
 }

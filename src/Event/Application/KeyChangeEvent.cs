@@ -3,7 +3,7 @@ using SDL2;
 
 namespace Bound.Event.Application
 {
-    public class KeyChangeEvent : IBoundEvent
+    public class KeyChangeEvent : ISDLEvent
     {
         private byte _state;
 

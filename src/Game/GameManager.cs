@@ -1,40 +1,42 @@
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using Bound.Event;
-using Bound.Event.Game;
-using Bound.Event.Application;
 using Bound.Graphics;
 using Bound.Graphics.Scene;
+using Bound.Utilities.Configuration;
+using Bound.Utilities.Timing;
 
 namespace Bound.Game
 {
     public class GameManager : IGameManager
     {
-        private IBoundEventParser _eventParser;
+        private IntPtr _context;
+        private IConfiguration _configuration;
+        private IRenderer _renderer;
+        private ITimer _timer;
         private ISceneHandler _sceneHandler;
 
-        public IEnumerable<IDrawable> Drawables { get; private set; }
-
-        public GameManager()
+        public GameManager(IntPtr context, IConfiguration configuration)
         {
-            Drawables = new List<IDrawable>();
-            _eventParser = new BoundEventParser();
+            _context = context;
+            _configuration = configuration;
+
+            _renderer = new Renderer(_context);
+            _renderer.CreateRenderer();
+
+            _timer = new Timer();
             _sceneHandler = new SceneHandler();
-
-            // _sceneHandler.AddScenes(new IScene[] {
-            //     new MainMenuScene()
-            // });
         }
 
-        public void Update(double deltaTime, IEnumerable<IBoundEvent> events)
+        public void Update(EventsCollection events)
         {
-            
+            _sceneHandler.Update(_timer.DeltaTime, events);
+
+            _renderer.Draw();
         }
 
-        public void Destroy()
+        public void Quit()
         {
-
+            _renderer?.Destroy();
         }
     }
 }

@@ -1,6 +1,7 @@
 .vscode/
 obj/
 bin/
+planning/
 
 # Windows image file caches
 Thumbs.db

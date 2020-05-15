@@ -1,53 +1,53 @@
 using System;
 using System.Collections.Generic;
 using SDL2;
+using Serilog;
 
 namespace Bound.Graphics
 {
     public class Renderer : IRenderer
     {
-        private IntPtr _windowHandler;
+        private IntPtr _context;
+        private IntPtr _rendererHandle;
 
-        public IntPtr RendererHandler { get; private set; }
-        public List<IDrawable> Drawables { get; private set; }
+        public bool Exists => _rendererHandle != IntPtr.Zero;
 
-        public Renderer(IntPtr windowHandler)
+        public Renderer(IntPtr context)
         {
-            _windowHandler = windowHandler;
-
-            RendererHandler = IntPtr.Zero;
-            Drawables = new List<IDrawable>();
+            _context = context;
         }
 
-        public void Create()
+        public void CreateRenderer()
         {
-            if(_windowHandler == IntPtr.Zero)
-                return;
-
-            RendererHandler = SDL.SDL_CreateRenderer(_windowHandler, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
-
-            if(RendererHandler == IntPtr.Zero)
-                throw new Exception($"Renderer could not be created! {SDL.SDL_GetError()}");
-        }
-
-        public void Draw(IEnumerable<IDrawable> drawables)
-        {
-            SDL.SDL_RenderClear(RendererHandler);
-
-            foreach(var drawable in drawables)
+            if(_rendererHandle != IntPtr.Zero)
             {
-                SDL.SDL_Rect crop = drawable.Crop;
-                SDL.SDL_Rect pos = drawable.Position;
-                
-                SDL.SDL_RenderCopy(RendererHandler, drawable.Texture, ref crop, ref pos);
+                Log.Warning("Renderer handle already set.");
+
+                return;
             }
 
-            SDL.SDL_RenderPresent(RendererHandler);
+            if(_context == IntPtr.Zero)
+                throw new NullReferenceException("Renderer could not be created; ApplicationContext handle not found");
+
+            _rendererHandle = SDL.SDL_CreateRenderer(_context, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+        
+            if(_rendererHandle == IntPtr.Zero)
+                throw new NullReferenceException($"Renderer could not be created. SDL Error: {SDL.SDL_GetError()}");
+        }
+
+        public void Draw()
+        {
+            SDL.SDL_RenderClear(_rendererHandle);
+
+            SDL.SDL_RenderPresent(_rendererHandle);
         }
 
         public void Destroy()
         {
-            SDL.SDL_DestroyRenderer(RendererHandler);
+            if(_rendererHandle == IntPtr.Zero)
+                return;
+                
+            SDL.SDL_DestroyRenderer(_rendererHandle);
         }
     }
 }

@@ -5,6 +5,6 @@ namespace Bound.Graphics
 {
     public interface IDraw
     {
-        void Draw(IEnumerable<IDrawable> drawables);
+        void Draw(IEnumerable<Drawable> drawables);
     }
 }

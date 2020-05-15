@@ -1,6 +1,6 @@
 using System;
 
-namespace Bound.Graphics
+namespace Bound.ApplicationBoot
 {
     public interface IWindow
     {
@@ -8,7 +8,7 @@ namespace Bound.Graphics
         string Title { get; }
         int Width { get; }
         int Height { get; }
-        
+
         void Create();
         void Destroy();
     }

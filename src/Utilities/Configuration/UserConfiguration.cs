@@ -28,7 +28,7 @@ namespace Bound.Utilities.Configuration
             };
         }
 
-        public void Load()
+        public void Initialize()
         {
             Defaults();
         }

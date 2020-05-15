@@ -1,73 +1,88 @@
 using System;
+using Serilog;
 using Bound.Game;
-using Bound.Event.Application;
-using Bound.MediaLibrary;
+using Bound.ApplicationBoot;
 using Bound.Utilities.Configuration;
+using Bound.Utilities.Logging;
+using Bound.Event;
+using Bound.Event.Application;
 
 namespace Bound
 {
     /// <summary>
-    /// BoundApplication connects subsystems for basic application functionality. Such things
-    /// would include application configuration, window/renderer creation, event handling, and 
-    /// initializing the game manager.
-    /// 
-    /// It's important to recognize the distinction between this class and the Game Manager (GM).
-    /// The GM is a modular subsystem for creating scenes, parsing events (provided by this class), 
-    /// and other game-related functionality. BoundApplication is the bootstrap.
+    /// Creates basic application functionality i.e. application context (window), configuration, 
+    /// logging, and a game manager.
     /// </summary>
     public class BoundApplication : IApplication
     {
-        private ISDLHandler _sdl;
+        private IBoundLogger _logger;
         private IConfiguration _config;
+        private IApplicationContext _context;
         private IGameManager _game;
+        private ISDLEventParser _sdlEventParser;
 
-        public void Initialize(bool debugging = false)
+        /// <summary>
+        /// Initialize essential systems for application.
+        /// </summary>
+        public void Initialize(bool debugging)
         {
-            _config = new UserConfiguration(debugging);
-            _config.Load();
+            _logger = new BoundLogger(debugging);
 
-            _sdl = new SDLHandler(_config);
-            _sdl.Initialize();
+            try
+            {
+                _config = new UserConfiguration(debugging);
+                _config.Initialize();
 
-            _game = new GameManager();
+                _context = new ApplicationContext(_config);
+                _context.CreateContext();
+
+                _sdlEventParser = new SDLEventParser();
+                _game = new GameManager(_context.ContextHandle, _config);
+            }
+            catch(Exception e)
+            {
+                Log.Fatal("Application could not be initialized! {e}", e);
+            }
         }
 
+        /// <summary>
+        /// Application loop.
+        /// 
+        /// Parsed SDL events are fed into IGameManager's Update method.
+        /// </summary>
         public void Run()
         {
-            while(_sdl.IsRunning)
-            {
-                _sdl.UpdateTime();
-                _sdl.PollEvents();
-                _game.Update(_sdl.DeltaTime, _sdl.Events.GetAll());
-                _sdl.Draw(_game.Drawables);
-
-                CheckApplicationState();
-
-                _sdl.ClearEvents();
-            }
-        }
-
-        private void CheckApplicationState()
-        {
-            var state = (ApplicationState)_sdl.Events.GetFirstInstanceOfType<ApplicationState>();
-
-            if(state == null)
+            if(_context == null || _game == null)
                 return;
-
-            switch(state.CurrentState)
+                
+            while(_context.IsRunning)
             {
-                case States.Closing:
-                    Console.WriteLine("closing");
+                _sdlEventParser.PollEvents();
 
+                _game.Update(_sdlEventParser.ParsedEvents);
+
+                if(IsApplicationClosing())
                     Quit();
-                break;
+
+                _sdlEventParser.ClearEvents();
             }
         }
 
+        /// <summary>
+        /// Request game to quit, and destroy the ApplicationContext.
+        /// </summary>
         private void Quit()
         {
-            _game?.Destroy();
-            _sdl?.Quit();
+            _game?.Quit();
+            _context?.Destroy();
+        }
+
+        /// <summary>
+        /// Checks parsed events for application closing event.
+        /// </summary>
+        private bool IsApplicationClosing()
+        {
+            return _sdlEventParser.ParsedEvents.GetFirstInstanceOfType<ApplicationClosingEvent>() != null;
         }
     }
 }

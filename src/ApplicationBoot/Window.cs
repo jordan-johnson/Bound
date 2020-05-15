@@ -1,7 +1,7 @@
 using System;
 using SDL2;
 
-namespace Bound.Graphics
+namespace Bound.ApplicationBoot
 {
     public class Window : IWindow
     {
@@ -38,6 +38,9 @@ namespace Bound.Graphics
 
         public void Destroy()
         {
+            if(WindowHandler == IntPtr.Zero)
+                return;
+                
             SDL.SDL_DestroyWindow(WindowHandler);
         }
     }

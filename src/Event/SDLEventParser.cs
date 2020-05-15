@@ -1,6 +1,7 @@
 using SDL2;
+using Bound.Event.Application;
 
-namespace Bound.Event.Application
+namespace Bound.Event
 {
     /// <summary>
     /// The EventHandler class is a low-level event parser. Events are interpreted and pushed 
@@ -10,11 +11,11 @@ namespace Bound.Event.Application
     {
         private SDL.SDL_Event _sdlEvent;
 
-        public EventsCollection Events { get; private set; }
+        public EventsCollection ParsedEvents { get; }
 
         public SDLEventParser()
         {
-            Events = new EventsCollection();
+            ParsedEvents = new EventsCollection();
         }
 
         public void PollEvents()
@@ -27,18 +28,15 @@ namespace Bound.Event.Application
                     case SDL.SDL_EventType.SDL_KEYUP:
                         var key = _sdlEvent.key;
                         
-                        Events.Add(new KeyChangeEvent(key.keysym.sym, key.state));
+                        ParsedEvents.Add(new KeyChangeEvent(key.keysym.sym, key.state));
                     break;
                     case SDL.SDL_EventType.SDL_QUIT:
-                        Events.Add(new ApplicationState(States.Closing));
+                        ParsedEvents.Add(new ApplicationClosingEvent());
                     break;
                 }
             }
         }
 
-        public void ClearEvents()
-        {
-            Events.ClearAll();
-        }
+        public void ClearEvents() => ParsedEvents.RemoveAllOfType<ISDLEvent>();
     }
 }
